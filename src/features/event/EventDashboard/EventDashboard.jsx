@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import { Button, Grid } from "semantic-ui-react"
+import cuid from 'cuid'
 import EventList from "../EventList/EventList"
 import EventForm from "../EventForm/EventForm"
-import { isThisSecond } from "date-fns"
 
 const eventsDashboard = [
   {
@@ -61,6 +61,15 @@ class EventDashboard extends Component {
       events: eventsDashboard,
       isOpen: false
   }
+  handleCreateEvent = (newEvent) => {
+    newEvent.id = cuid()
+    newEvent.hostPhotoURL = '/assets/user.png'
+    const updatedEvents = [...this.state.events, newEvent]
+    this.setState(()=>({
+      events: updatedEvents,
+      isOpen: false
+    }))
+  }
   handleFormOpen = () => {
     this.setState(()=>({
       isOpen: true
@@ -79,7 +88,7 @@ class EventDashboard extends Component {
         </Grid.Column>
         <Grid.Column computer={6} only='computer'>
           <Button onClick={this.handleFormOpen} positive content='Create Event'/>
-          {this.state.isOpen && <EventForm handleCancel={this.handleCancel}/>}
+          {this.state.isOpen && <EventForm createEvent={this.handleCreateEvent} handleCancel={this.handleCancel}/>}
         </Grid.Column>
       </Grid>
     )
